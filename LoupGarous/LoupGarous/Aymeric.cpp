@@ -30,7 +30,7 @@ int main()
 
 	listen(sock, 0);
 
-	while (1) {
+	while (n<8) {
 		int sinsize = sizeof(Csin);
 		Csock = accept(sock, (SOCKADDR*)&Csin, &sinsize);
 		if (Csock != INVALID_SOCKET) {
@@ -41,8 +41,34 @@ int main()
 			//le metrre vivant
 			//lui donner une carte
 			closesocket(Csock);
+			n++;//nombre de joueur +1
 		}
 	}
 
+	//la partie commence
+
+	bool gagnant = false;
+
+	while (!gagnant) {
+		printf("les villageois s'endorment");//envoyer à tous les joueurs
+		tourLoup();
+		printf("les villageois se reveillent");//envoyer à tous les joueurs
+		tourVillage();
+	}
+	
+
 	WSACleanup();
+}
+
+
+void tourLoup() {
+	//chat loup
+	// slash kill pour tuer
+	//mort
+}
+
+void tourVillage() {
+	//chat commun
+	//vote 
+	//mort
 }
