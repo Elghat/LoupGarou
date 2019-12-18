@@ -2,7 +2,7 @@
 
 int main()
 {
-	int n = 0; //nombre de joueur
+	int nbrJoueur = 0; //nombre de joueur
 
 	char myString[255] = { NULL };
 
@@ -30,7 +30,7 @@ int main()
 
 	listen(sock, 0);
 
-	while (n<8) {
+	while (nbrJoueur <8) {
 		int sinsize = sizeof(Csin);
 		Csock = accept(sock, (SOCKADDR*)&Csin, &sinsize);
 		if (Csock != INVALID_SOCKET) {
@@ -41,7 +41,7 @@ int main()
 			//le metrre vivant
 			//lui donner une carte
 			closesocket(Csock);
-			n++;//nombre de joueur +1
+			nbrJoueur++;//nombre de joueur +1
 		}
 	}
 
