@@ -18,8 +18,6 @@ void ConnectS()
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	//char line[255] = { NULL };
 	//
-
-
 	if (bind(sock, (SOCKADDR*)&sin, sizeof(sin)))
 	{
 		printf("success");
@@ -43,11 +41,7 @@ void ConnectS()
 			send(csock, mystring, strlen(mystring), 0);
 			closesocket(csock);
 		}
-	}
-
-
-
-	
+	}	
 }
 
 
