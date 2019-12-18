@@ -7,8 +7,9 @@ int main()
 	//char servername[255] = { NULL };
 	WSADATA WSAData; // Variable uniquement utile pour le WSAStartup
 	WSAStartup(MAKEWORD(2, 0), &WSAData);  // On dit au pc qu'on voudrait utiliser les sockets
-
-	SOCKET sock; // Le socket server
+	joueur* mesJoueurs;
+	mesJoueurs = (joueur*)malloc(8);
+	SOCKET sock = NULL; // Le socket server
 	SOCKET csock; // Le socket client
 	SOCKADDR_IN sin; // Contient les informations techniques du socket server
 	SOCKADDR_IN csin;  // Contient les informations techniques du socket client
@@ -19,7 +20,6 @@ int main()
 	//char line[255] = { NULL };
 	//
 
-
 	if (bind(sock, (SOCKADDR*)&sin, sizeof(sin)))
 	{
 		printf("success");
@@ -28,31 +28,27 @@ int main()
 	{
 		printf("error");
 	}
-
-	listen(sock, 0);
-	int val = 0; // La variable int val sera utilisée pour prendre la valeur de retour du accept()
+	if (sock)
+	{
+		printf("Socket initialized");
+	}
+	listen(sock, 0);//
 	int sinsize = sizeof(csin);
+	//Si un joueur s'est connecté
 	if ((csock = accept(sock, (SOCKADDR*)&csin, &sinsize)) != INVALID_SOCKET)
 	{
-		strcpy(mystring, "Hello World");
+		printf("Someone connected");
+		strcpy(mystring, "Hello World\r\n");
 		send(csock, mystring, strlen(mystring), 0);
+		send(csock, "connard\0", strlen("connard\0"), 0);
+		/*recv(csock, )*/
 	}
-
+	//Recevoir message et imprimer le message dans la console du server
 	while (1)
 	{
-
-		//if ((csock = accept(sock, (SOCKADDR*)&csin, &sinsize)) != INVALID_SOCKET)
-
-
-
-
-			//scanf("%s", &mystring);
-
 		recv(csock, mystring, sizeof(mystring), 0);
+		//TODO : Créer une fonction qui envoie le message a tout le monde
 		printf("%s", mystring);
-
-		//free(mystring);
-
 	}
 
 	closesocket(csock);

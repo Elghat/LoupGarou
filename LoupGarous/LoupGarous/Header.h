@@ -7,10 +7,6 @@
 
 
 
-void ConnectS();
-void Deconnect();
-
-
-
 #pragma warning (disable:4996)
+#pragma warning (disable:6031)
 #pragma comment(lib,"ws2_32.lib")
