@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+// <<<<<<< HEAD
 //#include "Header.h"
 //
 //int main()
@@ -73,9 +73,9 @@
 //	//vote 
 //	//mort
 //}
-=======
-#include "Header.h"
-
+//=======
+//#include "Header.h"
+/*
 int main()
 {
 	int nbrJoueur = 0; //nombre de joueur
@@ -148,4 +148,5 @@ void tourVillage() {
 	//vote 
 	//mort
 }
->>>>>>> master
+//>>>>>>> master
+*/
