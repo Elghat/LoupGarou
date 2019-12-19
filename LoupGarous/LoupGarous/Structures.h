@@ -7,4 +7,5 @@ typedef struct monJoueur
 	//monJoueur* _previous;
 	bool isConnected;
 	char message[255];
+	SOCKET csock;
 }joueur;
