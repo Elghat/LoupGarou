@@ -1,13 +1,17 @@
 #include "Header.h"
 //#include "Kevin.cpp"
+void threadEcouteJoueur(SOCKET csock, int indexPlayer);
+void sendMessageToAll(char message[255]);
+
 int main()
 {
-
+	srand(time(NULL));
+	int nbrLoup = 2;
+	int nbrVillageois = 6;
 	char mystring[255] = { NULL };
 	int nbrJoueur = 0;
 	WSADATA WSAData; // Variable uniquement utile pour le WSAStartup
 	WSAStartup(MAKEWORD(2, 0), &WSAData);  // On dit au pc qu'on voudrait utiliser les sockets
-	joueur* mesJoueurs;
 	mesJoueurs = (joueur*)calloc(8, sizeof(joueur));
 	SOCKET sock = NULL; // Le socket server
 	SOCKET csock; // Le socket client
@@ -41,20 +45,28 @@ int main()
 		{
 			strcpy(mystring, "You are connected");
 			send(csock, mystring, strlen(mystring), 0);
-			recv(csock, mesJoueurs[0].pseudo, sizeof(mesJoueurs[0].pseudo), 0);//recevoir le pseudo
-			//mettre le pseudo dans la structure joueur
-			//le metrre vivant
-			//lui donner une carte
+			recv(csock, mesJoueurs[nbrJoueur].pseudo, sizeof(mesJoueurs[nbrJoueur].pseudo), 0);//recevoir le pseudo
+			mesJoueurs[nbrJoueur].alive = true;
+			int choixCarte = rand() % 2;
+			mesJoueurs[nbrJoueur].csock = csock;
+			do
+			{
+				if (choixCarte == 0 && nbrLoup > 0)
+				{
+					strcpy(mesJoueurs[nbrJoueur].carte, "Loup");
+					nbrLoup--;
+				}
+				if (choixCarte == 1 && nbrVillageois > 0)
+				{
+					strcpy(mesJoueurs[nbrJoueur].carte, "Villageois");
+					nbrVillageois--;
+				}
+			} while (nbrLoup != nbrLoup - 1 && nbrLoup > 0 || nbrVillageois != nbrVillageois - 1 && nbrVillageois > 0);
+			std::thread ecouteJoueur(threadEcouteJoueur, mesJoueurs[nbrJoueur].csock, nbrJoueur);
 			nbrJoueur++;//nombre de joueur +1
 		}
 	}
 	//Recevoir message et imprimer le message dans la console du server
-	while (1)
-	{
-		recv(csock, mystring, sizeof(mystring), 0);
-		//TODO : Créer une fonction qui envoie le message a tout le monde
-		printf("%s", mystring);
-	}
 	
 	WSACleanup();
 
@@ -71,4 +83,29 @@ void tourVillage() {
 	//chat commun
 	//vote 
 	//mort
+}
+
+void threadEcouteJoueur(SOCKET csock, int indexPlayer)
+{
+	char message[255] = { NULL };
+	char tmplMessage[255];
+	while (1)
+	{
+		strcpy(tmplMessage, mesJoueurs[indexPlayer].pseudo);
+		strcat(tmplMessage, " : ");
+		recv(csock, message, sizeof(message), 0);
+		strcat(tmplMessage, message);
+		sendMessageToAll(tmplMessage);
+		printf("%s", tmplMessage);
+		memset(message, 0,sizeof(message));
+		memset(tmplMessage, 0, sizeof(tmplMessage));
+	}
+}
+
+void sendMessageToAll(char message[255])
+{
+	for (int i = 0; i < 9; i++)
+	{
+		send(mesJoueurs[i].csock, message, strlen(message), 0);
+	}
 }
